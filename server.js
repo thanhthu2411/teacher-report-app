@@ -3,6 +3,7 @@ import session from 'express-session'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import router from './src/controllers/routes.js'
+import { setupDatabase, testConnection } from './src/models/setup.js'
 
 const app = express()
 app.set('trust proxy', 1);
@@ -69,6 +70,8 @@ app.use((err, req, res, next) => {
 })
 
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
+    await setupDatabase();
+    await testConnection();
     console.log(`Server running on http://localhost:${PORT}`)
 })
