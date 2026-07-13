@@ -1,0 +1,125 @@
+<%- include('./partials/header')%>
+<main class="standard-page">
+    <div class="class-page">
+        <div class="breadcrumb">
+            <a href="/dashboard">Dashboard</a>
+            <span>›</span>
+            <span>Class <%= cls.name %></span>
+        </div>
+
+        <div class="class-header">
+            <div>
+                <p class="eyebrow">Class</p>
+                <h1><%= cls.name %> — <%= cls.academic_year %></h1>
+            </div>
+            <div class="class-header-actions">
+                <button class="btn-secondary" id="edit-class-btn">Edit Class</button>
+                <button class="btn-primary" id="add-student-btn">+ New Student</button>
+            </div>
+        </div>
+
+        <div class="info-card">
+            <div class="info-fields">
+                <div class="info-field">
+                    <span class="info-label">Class Name</span>
+                    <span class="info-value"><%= cls.name %></span>
+                </div>
+                <div class="info-field">
+                    <span class="info-label">Academic Year</span>
+                    <span class="info-value"><%= cls.academic_year %></span>
+                </div>
+                <div class="info-field">
+                    <span class="info-label">Students</span>
+                    <span class="info-value" id="student-count"><%= students.length %></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="students-section">
+            <h2>Students</h2>
+            <% if (students.length > 0) { %>
+                <div class="student-list" id="student-list">
+                    <% students.forEach((student, index) => { %>
+                        <div class="student-row">
+                            <span class="student-index"><%= index + 1 %></span>
+                            <span class="student-name"><%= student.studentName %></span>
+                            <div class="student-actions">
+                                <a href="/classes/<%= cls.slug %>/students/<%= student.studentSlug %>" 
+                                class="view-btn">View →</a>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <div class="empty-state">
+                    <p>No students yet.</p>
+                    <p>Click <strong>New Student</strong> to get started.</p>
+                </div>
+            <% } %>
+        </div>
+
+    </div>
+</main>
+
+<!-- Edit Class Modal -->
+<div class="modal-overlay edit-class-modal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3>Edit Class</h3>
+      <button class="modal-close-btn">✕</button>
+    </div>
+    <form id="edit-class-form">
+      <div class="form-group">
+        <label for="class-name">Class Name<span class="form-required-star">*</span></label>
+        <input type="text" id="class-name" name="name" required placeholder="e.g. 4A" value="4A">
+      </div>
+      <div class="form-group">
+        <label for="class-year">Academic Year<span class="form-required-star">*</span></label>
+        <input type="text" id="class-year" name="year" required placeholder="e.g. 2024-2025" value="2024-2025">
+        <p class="help-text">Separate years with a dash — e.g. 2024-2025</p>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" id="cancel-edit-btn">Cancel</button>
+        <button type="submit" class="btn-primary" id="save-edit-btn">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Add Student Modal -->
+<div class="modal-overlay add-student-modal">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h3>Add New Student</h3>
+      <button class="modal-close-btn">✕</button>
+    </div>
+    <form id="add-student-form">
+      <div class="form-group">
+        <label for="student-name">Full Name<span class="form-required-star">*</span></label>
+        <input type="text" id="student-name" name="name" required placeholder="e.g. Nguyen Thi A">
+      </div>
+      <div class="form-group">
+        <div class="label-row">
+          <label for="student-dob">Date of Birth<span class="form-required-star">*</span></label>
+          <!-- <span class="label-hint">DD/MM/YYYY</span> -->
+        </div>
+        <input type="date" id="student-dob" name="dob" required>
+      </div>
+      <div class="form-group">
+        <label for="student-gender">Gender<span class="form-required-star">*</span></label>
+        <div class="select-wrapper">
+          <select id="student-gender" name="gender" required>
+            <option value="" disabled selected>Select gender</option>
+            <option value="M">Male</option>
+            <option value="F">Female</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secondary" id="cancel-student-btn">Cancel</button>
+        <button type="submit" class="btn-primary" id="save-student-btn">Add Student</button>
+      </div>
+    </form>
+  </div>
+</div>
+<%- include('./partials/footer')%>

@@ -1,0 +1,53 @@
+  .login-card { 
+    background: #FFFFFF; 
+    border-radius: 16px; 
+    padding: 2.5rem 2rem; 
+    width: 100%; 
+    max-width: 400px; 
+    border-left: 3px solid #6B8F71; 
+    border-top: 0.5px solid #E0DDD6; 
+    border-right: 0.5px solid #E0DDD6; 
+    border-bottom: 0.5px solid #E0DDD6; 
+
+    .eyebrow { 
+        font-size: 11px; 
+        letter-spacing: 0.1em; 
+        text-transform: uppercase; 
+        color: #6B8F71; 
+        font-weight: 500; 
+        margin-bottom: 8px; }
+    
+    .login-card h1 { 
+        font-family: 'DM Serif Display', serif; 
+        font-size: 28px; 
+        font-weight: 400; 
+        color: #2C3340; 
+        margin-bottom: 6px; }
+    .des-text { 
+        font-size: 13px; 
+        color: #7A7D85; 
+        line-height: 1.6; 
+        margin-bottom: 1.75rem; }
+
+    .des-text a { 
+        color: #6B8F71; 
+        text-decoration: none; 
+        font-weight: 500; }
+
+    .des-text p a:hover { 
+        text-decoration: underline; }
+
+    .form-group { margin-bottom: 1.1rem; }
+    label { display: block; font-size: 13px; font-weight: 500; color: #3D4452; margin-bottom: 5px; }
+    .form-required-star { color: #C0503A; margin-left: 2px; }
+    input { width: 100%; height: 40px; padding: 0 12px; border: 0.5px solid #C8C5BD; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px; color: #2C3340; background: #FAFAF8; outline: none; transition: border-color 0.15s; }
+    input:focus { border-color: #6B8F71; background: #fff; box-shadow: 0 0 0 3px rgba(107, 143, 113, 0.12); }
+    input::placeholder { color: #B0AEA8; }
+    button[type="submit"] { width: 100%; height: 42px; background: #2C3340; color: #fff; border: none; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.15s; margin-top: 0.5rem; }
+    button[type="submit"]:hover { background: #3D4D5C; }
+    .register-link { text-align: center; font-size: 13px; color: #7A7D85; margin-top: 1rem; }
+    .register-link a { color: #6B8F71; text-decoration: none; font-weight: 500; }
+    .register-link a:hover { text-decoration: underline; }
+    .error-msg { font-size: 12px; color: #C0503A; background: #FDF0ED; border: 0.5px solid #F0C4B8; border-radius: 6px; padding: 8px 12px; margin-bottom: 1rem; }
+
+}

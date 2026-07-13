@@ -15,7 +15,6 @@ const setupDatabase = async () => {
         );
 
         hasData = result.rows[0]?.has_data || false;
-
     } catch(error) {
         hasData = false;
     }

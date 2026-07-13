@@ -1,0 +1,221 @@
+<%- include('./partials/header') %>
+<main class="standard-page">
+    <div class="student-page">
+
+        <div class="breadcrumb">
+            <a href="/dashboard">Dashboard</a>
+            <span>›</span>
+            <a href="/classes/<%= cls.slug %>">Class <%= cls.name %></a>
+            <span>›</span>
+            <span><%= student.studentName %></span>
+        </div>
+
+        <div class="student-header">
+            <div>
+                <p class="eyebrow">Student</p>
+                <h1><%= student.studentName %></h1>
+            </div>
+            <button class="btn-primary" id="add-performance-btn">+ Add Performance</button>
+        </div>
+
+        <div class="student-info">
+            <div class="info-card">
+                <div class="info-fields">
+                    <div class="info-field">
+                        <span class="info-label">Full Name</span>
+                        <span class="info-value"><%= student.studentName %></span>
+                    </div>
+                    <div class="info-field">
+                        <span class="info-label">Class</span>
+                        <span class="info-value"><%= cls.name %></span>
+                    </div>
+                    <div class="info-field">
+                        <span class="info-label">Date of Birth</span>
+                        <span class="info-value"><%= student.birthday %></span>
+                    </div>
+                    <div class="info-field">
+                        <span class="info-label">Gender</span>
+                        <span class="info-value"><%= student.gender === 'M' ? 'Male' : 'Female' %></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="performance-section">
+            <h2>Performance History</h2>
+            <% if (performances && performances.length > 0) { %>
+                <div class="performance-list">
+                    <% performances.forEach(perf => { %>
+                        <div class="performance-card">
+                            <div class="performance-card-header">
+                                <h3><%= perf.periodLabel %></h3>
+                                <span class="performance-date"><%= new Date(perf.createdAt).toLocaleDateString() %></span>
+                            </div>
+
+                            <div class="performance-details">
+                                <% if (perf.exams && perf.exams.length > 0) { %>
+                                    <div class="exams-section">
+                                        <h4>Exams</h4>
+                                        <% perf.exams.forEach(exam => { %>
+                                            <div class="exam-item">
+                                                <span class="exam-subject"><%= exam.subject %></span>
+                                                <span class="exam-score"><%= exam.score %>/100</span>
+                                                <% if (exam.note) { %>
+                                                    <span class="exam-note"><%= exam.note %></span>
+                                                <% } %>
+                                            </div>
+                                        <% }) %>
+                                    </div>
+                                <% } %>
+
+                                <% if (perf.behavior) { %>
+                                    <div class="behavior-section">
+                                        <h4>Behavior</h4>
+                                        <p>Attendance: <%= perf.behavior.attendance %>/<%= perf.behavior.totalDays %> days</p>
+                                        <p>Rule following: <%= perf.behavior.ruleFollowing %>/5</p>
+                                    </div>
+                                <% } %>
+
+                                <% if (perf.notes && perf.notes.length > 0) { %>
+                                    <div class="notes-section">
+                                        <h4>Notes</h4>
+                                        <% perf.notes.forEach(note => { %>
+                                            <p class="note-item"><%= note.text %></p>
+                                        <% }) %>
+                                    </div>
+                                <% } %>
+                            </div>
+
+                            <button class="btn-primary generate-report-btn" 
+                                    data-performance-id="<%= perf.performanceId %>">
+                                Generate Report
+                            </button>
+
+                            <!-- report section  -->
+                            <div class="report-section" id="report-<%= perf.performanceId %>">
+                                <% if (perf.report) { %>
+                                    <div class="report-content">
+                                        <div class="report-header">
+                                            <h4>Generated Report</h4>
+                                            <span class="report-badge">AI Generated</span>
+                                        </div>
+                                        <textarea class="report-textarea" rows="10"><%= perf.report %></textarea>
+                                        <p class="report-hint">You can edit this report before saving. Changes are not saved automatically.</p>
+                                        <div class="report-actions">
+                                            <div class="report-actions-left">
+                                                <button class="btn-secondary regenerate-btn"
+                                                        data-performance-id="<%= perf.performanceId %>">
+                                                    Regenerate
+                                                </button>
+                                                <button class="btn-primary save-report-btn"
+                                                        data-performance-id="<%= perf.performanceId %>">
+                                                    Save Report
+                                                </button>
+                                            </div>
+                                            <span class="report-saved-label" id="saved-label-<%= perf.performanceId %>">✓ Saved</span>
+                                        </div>
+                                    </div>
+                                <% } else { %>
+                                    <div class="report-empty">
+                                        <span class="report-empty-icon">📄</span>
+                                        <p>No report yet. Click <strong>Generate Report</strong> to create one using AI.</p>
+                                    </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <div class="empty-state">
+                    <p>No performance records yet.</p>
+                    <p>Click <strong>Add Performance</strong> to get started.</p>
+                </div>
+            <% } %>
+        </div>
+
+    </div>
+</main>
+
+<!-- add performance modal -->
+<div class="modal-overlay" id="add-performance-modal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3>New Performance Record</h3>
+            <button class="modal-close-btn">✕</button>
+        </div>
+        <form id="add-performance-form">
+
+            <div class="form-group">
+                <label for="period">Period<span class="form-required-star">*</span></label>
+                <div class="select-wrapper">
+                    <select id="period" name="period" required>
+                        <option value="" disabled selected>Select period</option>
+                        <option value="Monthly">Monthly</option>
+                        <option value="Midterm">Midterm</option>
+                        <option value="Final">Final</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- exams -->
+            <div class="form-section">
+                <h4>Exams</h4>
+                <div id="exam-list">
+                    <div class="exam-row">
+                        <input type="text" class="exam-subject" placeholder="Subject" required>
+                        <input type="number" class="exam-score" placeholder="Score" min="0" max="100" required>
+                        <textarea class="exam-note" placeholder="Note (optional)" rows="1"></textarea>
+                    </div>
+                </div>
+                <button type="button" id="add-exam-btn" class="btn-ghost">+ Add Subject</button>
+            </div>
+
+            <!-- behavior -->
+            <div class="form-section">
+                <h4>Behavior</h4>
+                <div class="behavior-row">
+                    <div class="form-group">
+                        <label>Attendance<span class="form-required-star">*</span></label>
+                        <input type="number" id="attendance" name="attendance" placeholder="e.g. 18" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Total Days<span class="form-required-star">*</span></label>
+                        <input type="number" id="total-days" name="totalDays" placeholder="e.g. 20" min="0" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Rule Following<span class="form-required-star">*</span></label>
+                    <div class="rating-group">
+                        <% [1,2,3,4,5].forEach(n => { %>
+                            <label class="rating-option">
+                                <input type="radio" name="ruleFollowing" value="<%= n %>" required>
+                                <span><%= n %></span>
+                            </label>
+                        <% }) %>
+                    </div>
+                    <p class="help-text">1 = needs improvement → 5 = always follows rules</p>
+                </div>
+            </div>
+
+            <!-- notes -->
+            <div class="form-section">
+                <h4>Notes</h4>
+                <div id="notes-list">
+                    <div class="note-row">
+                        <textarea class="note-text" placeholder="Add a note..." rows="2"></textarea>
+                    </div>
+                </div>
+                <button type="button" id="add-note-btn" class="btn-ghost">+ Add Note</button>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" id="cancel-performance-btn">Cancel</button>
+                <button type="submit" class="btn-primary">Save Record</button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<%- include('./partials/footer') %>

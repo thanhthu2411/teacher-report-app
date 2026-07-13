@@ -1,0 +1,27 @@
+<%- include('../partials/header')%>
+<main class="page">
+    <div class="login-card">
+        <p class="eyebrow">Student Report System</p>
+        <h1>Welcome back</h1>
+        <p class="des-text">Enter your email and password to access your account. Don't have an account? <a href="/register">Register here</a>.</p>
+
+        <div class="error-msg" style="display:none" id="flash-error">Invalid email or password.</div>
+
+        <form method="POST" action="/login" class="login-form">
+        <div class="form-group">
+            <label for="email">Email<span class="form-required-star">*</span></label>
+            <input required type="email" id="email" name="email" maxlength="255" placeholder="Enter your email" />
+        </div>
+        <div class="form-group">
+            <label for="password">Password<span class="form-required-star">*</span></label>
+            <input type="password" required id="password" name="password" minlength="8" placeholder="Enter your password" />
+        </div>
+        <button type="submit">Sign in</button>
+        <div class="register-link">
+            New user? <a href="/register">Create an account</a>
+        </div>
+        </form>
+  </div>
+
+</main>
+<%- include('../partials/footer')%>

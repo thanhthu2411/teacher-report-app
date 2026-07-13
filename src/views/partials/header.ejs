@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="/css/base.css" rel="stylesheet">
+    <script type="module" src="/js/base.js"></script>
+
+</head>
+<body>
+    <header>
+        <a href="/dashboard" class="header-left">Student Report</a>
+        <div class="header-middle"></div>
+        <div class="header-right">
+            <%if (!isLoggedIn) { %> 
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+            <% } else { %>
+                <a href="/logout">Logout</a>
+            <% } %>
+        </div>
+    </header>
+    <div id="toast" class="toast" style="display:none"></div>

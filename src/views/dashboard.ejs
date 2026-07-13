@@ -1,0 +1,77 @@
+<%- include('./partials/header')%>
+<main class="standard-page">
+    <div class="dashboard-page">
+        <div class="dashboard-header">
+            <div>
+            <p class="eyebrow">Dashboard</p>
+            <h1>Hello, <%=user.name%> 👋</h1>
+            </div>
+            <button class="btn-primary" id="add-class-btn">+ New Class</button>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-card">
+            <span class="stat-number"><%= classes.length %></span>
+            <span class="stat-label">Classes</span>
+            </div>
+            <div class="stat-card">
+            <span class="stat-number"><%= classes.reduce((sum, c) => sum + Number(c.studentCount), 0) %></span>
+            <span class="stat-label">Total Students</span>
+            </div>
+        </div>
+
+        <div class="classes-section">
+            <h2>Your Classes</h2>
+            <% if (classes.length > 0) { %>
+                <div class="classes-grid">
+                    <% classes.forEach((cls) => { %>
+                        <a href="/classes/<%= cls.classSlug %>" class="class-card">
+                            <div class="class-card-top">
+                                <span class="class-name"><%= cls.className %></span>
+                                <span class="class-year"><%= cls.classYear %></span>
+                            </div>
+                            <div class="class-card-bottom">
+                                <span class="student-count"><%= cls.studentCount %> students</span>
+                                <span class="class-arrow">→</span>
+                            </div>
+                        </a>
+                    <% }) %>
+                </div>
+                <% } else { %>
+                    <div class="empty-state">
+                        <p>No classes yet.</p>
+                        <p>Click <strong>New Class</strong> to get started.</p>
+                    </div>
+                <% } %>
+        </div>
+
+    </div>
+
+</main>
+
+    <!-- modal -->
+    <div class="modal-overlay" id="add-class-modal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3>New Class</h3>
+            <button class="modal-close-btn" id="close-modal-btn">✕</button>
+        </div>
+        <form id="add-class-form">
+            <div class="form-group">
+                <label for="name">Class Name<span class="form-required-star">*</span></label>
+                <input type="text" id="name" class="class-name-input" name="name" required placeholder="e.g. 4A">
+            </div>
+            <div class="form-group">
+                <label for="year">Academic Year<span class="form-required-star">*</span></label>
+                <input type="text" id="year" class="class-year-input" name="year" required placeholder="e.g. 2024-2025">
+                <p class="help-text">Separate years with a dash — e.g. 2024-2025</p>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary" id="cancel-btn">Cancel</button>
+                <button type="submit" class="btn-primary" id="create-class-btn">Create Class</button>
+            </div>
+        </form>
+    </div>
+    </div>
+
+<%- include('./partials/footer')%>
