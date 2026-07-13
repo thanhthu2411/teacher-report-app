@@ -32,7 +32,7 @@ app.use(session({
     saveUninitialized: false,
     cookie: {
         httpOnly: true,
-        secure: false,   // change to true in production
+        secure: process.env.NODE_ENV === 'production',   // change to true in production
         maxAge: 1000 * 60 * 60 * 24  // 1 day
     }
 }))
@@ -50,10 +50,6 @@ app.use(addLocalVariables);
 // routes
 app.use('/', router);
 
-// temporary test — remove after confirming it works
-// const testPrompt = `Write a short 2-sentence greeting in Vietnamese for a teacher app.`
-// const result = await generateReport(testPrompt)
-// console.log('Gemini test:', result)
 
 // error handling 
 app.use((req, res, next) => {
@@ -62,48 +58,7 @@ app.use((req, res, next) => {
     next(err)
 })
 
-// app.use((err, req, res, next) => {
-//     if (res.headerSent || res.finished) {
-//         return next(err)
-//     }
 
-//     const status = err.status || 500;
-//     const template = status === 404 ? '404' : '500';
-
-//     const context = {
-//         title: status===404 ? 'Page Not Found' : 'Server Error',
-//         error: NODE_ENV === 'production' ? 'An error occured' : err.message,
-//         stack: NODE_ENV === 'production' ? null : err.stack,
-//         NODE_ENV
-//     };
-
-//     try {
-//         res.status(status).render(`errors/${template}`, context);
-//     } catch(renderErr) {
-//         if(!res.headerSent) {
-//             res.status(status).send(`<h1>Error ${status}</h1><p>An error occurred.</p>`);
-//         }
-//     }
-// })
-
-// if (NODE_ENV.includes('dev')) {
-//     const ws = await import('ws');
-
-//     try {
-//         const wsPort = parseInt(PORT) + 1;
-//         const wsServer = new ws.WebSocketServer({ port: wsPort });
-
-//         wsServer.on('listening', () => {
-//             console.log(`WebSocket server is running on port ${wsPort}`);
-//         });
-
-//         wsServer.on('error', (error) => {
-//             console.error('WebSocket server error:', error);
-//         });
-//     } catch (error) {
-//         console.error('Failed to start WebSocket server:', error);
-//     }
-// }
 
 app.use((err, req, res, next) => {
     if (res.headersSent || res.finished) {
