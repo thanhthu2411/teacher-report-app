@@ -165,7 +165,10 @@ const processExportReport = async (req, res) => {
         res.send(pdf)
         
     } catch(error) {
-        console.error('Error exporting report:', error)
+        // console.error('Error exporting report:', error)
+        // res.status(500).json({ success: false, message: 'Failed to export report' })
+        console.error('Error exporting report:', error.message)  // ← already have this
+        console.error('Full error:', error)  // ← add this to see full stack trace
         res.status(500).json({ success: false, message: 'Failed to export report' })
    
     }
