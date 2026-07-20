@@ -146,15 +146,30 @@ const processExportReport = async (req, res) => {
         const html = buildPdfHtml(performance, reportContent)
         
         // 4. launch puppeteer and generate PDF
+        
         // const browser = await puppeteer.launch({
         //     args: ['--no-sandbox', '--disable-setuid-sandbox']  // required for Linux/Render
         // })
-        const browser = await puppeteer.launch({
-            args: chromium.args,
-            executablePath: await chromium.executablePath(),
-            headless: chromium.headless,
-        })
+        // const browser = await puppeteer.launch({
+        //     args: chromium.args,
+        //     executablePath: await chromium.executablePath(),
+        //     headless: chromium.headless,
+        // })
 
+        // Check if you are running locally on Windows
+        const isLocal = process.platform === 'win32' || process.env.NODE_ENV === 'development';
+
+        const browser = await puppeteer.launch({
+            // In production, use sparticuz args. Locally, standard sandboxing is fine.
+            args: isLocal ? ['--no-sandbox', '--disable-setuid-sandbox'] : chromium.args,
+            
+            // Point to your local Chrome installation on Windows, or use sparticuz in production
+            executablePath: isLocal 
+                ? 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe' // Default Windows Chrome path
+                : await chromium.executablePath(),
+                
+            headless: isLocal ? true : chromium.headless,
+        })
         const page = await browser.newPage()
         await page.setContent(html, {waitUntil: 'networkidle0' })
         // like ctr + P, return pdf as raw bytes
