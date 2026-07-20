@@ -250,6 +250,10 @@ const displayPerformance = (performances, student) => {
                                                       data-performance-id="${perf.performanceId}">
                                                   Save Report
                                               </button>
+                                              <button class="btn-primary export-report-btn"
+                                                                data-performance-id="${perf.performanceId}">
+                                                  Export Report as PDF
+                                              </button>       
                                           </div>
                                           <span class="report-saved-label" id="saved-label-${perf.performanceId}">✓ Saved</span>
                                       </div>
@@ -344,6 +348,10 @@ const displayReport = (perf, report) => {
                           data-performance-id="${perf.performanceId}">
                       Save Report
                   </button>
+                  <button class="btn-primary export-report-btn"
+                        data-performance-id="${perf.performanceId}">
+                    Export Report as PDF
+                </button>
               </div>
               <span class="report-saved-label" id="saved-label-${perf.performanceId}">✓ Saved</span>
           </div>
@@ -415,6 +423,71 @@ const regenerateReportHandler = () => {
     })
 }
 
+// *** EXPORT REPORT HANDLER ***
+const exportReportHandler = () => {
+  document.addEventListener("click", async (e) => {
+        const exportBtn = e.target.closest(".export-report-btn")
+        if (!exportBtn) return
+
+        const performanceId = exportBtn.dataset.performanceId
+        exportBtn.textContent = 'Exporting...'
+        exportBtn.disabled = true
+
+        try {
+            const response = await fetch(`/api/performance/${performanceId}/report/export`, {
+              method: "POST",
+              credentials: 'include'
+            })
+
+            const contentType = response.headers.get('content-type')
+            // console.log('content-type:', contentType)
+
+            if (!response.ok || !contentType.includes('application/pdf')) {
+                const text = await response.text()
+                console.log('server response:', text)
+                return
+            }
+
+            //get response's raw binary data, convert bytes to Blob object 
+            const blob = await response.blob()
+            // Creates a temporary URL in the browser's memory that points to your blob
+            const url = URL.createObjectURL(blob)
+
+            const aLink = document.createElement('a')
+            aLink.href = url
+            // The download attribute tells the browser "when this link is clicked, download the file with this name" instead of navigating to it.
+            aLink.download = `report-${performanceId}.pdf`
+            //clicks the invisible link — triggers the browser's download dialog exactly as if the user clicked a download link themselves.
+            aLink.click()
+            //Cleans up memory — releases the temporary blob URL
+            URL.revokeObjectURL(url)
+
+        } catch(error) {
+          console.error(error)
+        } finally {
+            exportBtn.textContent = 'Export PDF'
+            exportBtn.disabled = false
+        }
+    })
+}
+
+// Teacher clicks "Export PDF"
+//     ↓
+// fetch() sends POST to /api/performance/12/report/export
+//     ↓
+// Server generates PDF bytes and sends back
+//     ↓
+// response.blob() reads those bytes
+//     ↓
+// URL.createObjectURL() creates temporary link
+//     ↓
+// invisible <a> click triggers download
+//     ↓
+// browser saves "report-12.pdf" to Downloads folder
+//     ↓
+// URL.revokeObjectURL() cleans up memory
+
+
 export {
   addPerformanceFormHandler,
   addExamHander,
@@ -424,5 +497,6 @@ export {
   addPerformanceHandler,
   generateReportHandler,
   saveReportHander,
-  regenerateReportHandler
+  regenerateReportHandler,
+  exportReportHandler
 };

@@ -2,7 +2,7 @@ import { Router } from "express";
 import authRouter from '../routes/auth.js';
 import { showDashboard, processCreateClass } from "./dashboard.js";
 import { showClassDetailPage, processAddNewStudent } from "./class.js";
-import { showStudentDetailPage, processAddNewPerformance, processGenerateReport, processSaveReport } from "./student.js";
+import { showStudentDetailPage, processAddNewPerformance, processGenerateReport, processSaveReport, processExportReport } from "./student.js";
 import { requireLogin } from "../middlewares/auth.js";
 import { addClassValidation } from "../middlewares/form.js";
 const router = Router()
@@ -21,5 +21,6 @@ router.post('/api/students/:studentSlug/performance', requireLogin, processAddNe
 
 router.post('/api/performance/:performanceId/report', requireLogin, processGenerateReport)
 router.post('/api/performance/:performanceId/report/save', requireLogin, processSaveReport)
+router.post('/api/performance/:performanceId/report/export', requireLogin, processExportReport)
 
 export default router

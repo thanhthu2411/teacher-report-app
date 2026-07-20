@@ -3,6 +3,9 @@ import { getClassBySlug } from "../models/class.js";
 import db from "../models/db.js";
 import { getPerformanceById, saveReport } from "../models/performance.js";
 import { generateReport, buildReportPrompt } from "../utils/ai.js";
+import {buildPdfHtml} from "../utils/pdf.js"
+
+import puppeteer from "puppeteer";
 
 const showStudentDetailPage = async (req, res, next) => {
     const classSlug = req.params.classSlug;
@@ -123,5 +126,51 @@ const processSaveReport = async (req, res) => {
     }
 }
 
+const processExportReport = async (req, res) => {
+    const { performanceId } = req.params
 
-export {showStudentDetailPage, processAddNewPerformance, processGenerateReport, processSaveReport}
+    try {
+        const performance = await getPerformanceById(performanceId)
+        if (!performance || performance.length == 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Performance not found'
+            })
+        }
+
+        const reportResult = await db.query(`SELECT content FROM reports WHERE performance_id = $1`, [performanceId])
+        const reportContent = reportResult.rows[0]?.content || 'No report generated yet.'
+        // 3. build HTML document
+        const html = buildPdfHtml(performance, reportContent)
+        
+        // 4. launch puppeteer and generate PDF
+        const browser = await puppeteer.launch({
+            args: ['--no-sandbox', '--disable-setuid-sandbox']  // required for Linux/Render
+        })
+
+        const page = await browser.newPage()
+        await page.setContent(html, {waitUntil: 'networkidle0' })
+        // like ctr + P, return pdf as raw bytes
+        const pdf = await page.pdf({
+            format: 'A4',
+            printBackground: true,
+            margin: { top: '20mm', bottom: '20mm', left: '20mm', right: '20mm' }
+        })
+        await browser.close()
+
+        // 5. send PDF as download
+        res.setHeader('Content-Type', 'application/pdf')
+        // tells the browser "download this, don't display it"
+        res.setHeader('Content-Disposition', `attachment; filename="report-${performance.studentName}-${performance.periodLabel}.pdf"`)
+        res.send(pdf)
+        
+    } catch(error) {
+        console.error('Error exporting report:', error)
+        res.status(500).json({ success: false, message: 'Failed to export report' })
+   
+    }
+
+}
+
+
+export {showStudentDetailPage, processAddNewPerformance, processGenerateReport, processSaveReport, processExportReport}
