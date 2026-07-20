@@ -5,7 +5,9 @@ import { getPerformanceById, saveReport } from "../models/performance.js";
 import { generateReport, buildReportPrompt } from "../utils/ai.js";
 import {buildPdfHtml} from "../utils/pdf.js"
 
-import puppeteer from "puppeteer";
+// import puppeteer from "puppeteer";
+import puppeteer from 'puppeteer-core'
+import chromium from '@sparticuz/chromium'
 
 const showStudentDetailPage = async (req, res, next) => {
     const classSlug = req.params.classSlug;
@@ -144,8 +146,13 @@ const processExportReport = async (req, res) => {
         const html = buildPdfHtml(performance, reportContent)
         
         // 4. launch puppeteer and generate PDF
+        // const browser = await puppeteer.launch({
+        //     args: ['--no-sandbox', '--disable-setuid-sandbox']  // required for Linux/Render
+        // })
         const browser = await puppeteer.launch({
-            args: ['--no-sandbox', '--disable-setuid-sandbox']  // required for Linux/Render
+            args: chromium.args,
+            executablePath: await chromium.executablePath(),
+            headless: chromium.headless,
         })
 
         const page = await browser.newPage()
