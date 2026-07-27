@@ -1,5 +1,5 @@
 import { getClassBySlug } from "../models/class.js";
-import { getStudentByClass, addNewStudent } from "../models/student.js";
+import { getStudentByClass, addNewStudent, deleteStudent} from "../models/student.js";
 
 const showClassDetailPage = async (req, res, next) => {
   const classSlug = req.params.classSlug;
@@ -56,6 +56,41 @@ const processAddNewStudent = async (req, res) => {
   }
 };
 
-export { showClassDetailPage, processAddNewStudent };
+const processDeleteStudent = async (req, res) => {
+    const {classSlug, studentId} = req.params
 
-// do class ejs and form -> then write frontend js
+    if (!classSlug || !studentId) {
+        return res.status(400).json({
+                success: false,
+                message: 'Route params not found'
+            })
+    }
+
+    try {
+        const deleted = await deleteStudent(studentId)
+        if (!deleted) {
+            return res.status(404).json({
+                success: false,
+                message: 'Student not found'
+            })
+        }
+
+        const cls = await getClassBySlug(classSlug);
+        const students = await getStudentByClass(cls.id);
+        res.status(200).json({
+            cls,
+            students,
+            success: true,
+            message: 'Student deleted successfully'
+        })
+    } catch(err) {
+        console.error(err)
+        res.status(500).json({
+            success: false,
+            message: "Failed to delete student"
+        })
+    }
+}
+
+export { showClassDetailPage, processAddNewStudent, processDeleteStudent };
+

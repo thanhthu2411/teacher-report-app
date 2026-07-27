@@ -1,4 +1,5 @@
-import { getSpecificStudent, getStudentBySlug, getPerformanceByStudent, addNewBehavior, addNewExam, addNewNotes, addNewPerformance } from "../models/student.js";
+import { getSpecificStudent, getStudentBySlug, getPerformanceByStudent, getStudentByClass,
+    addNewBehavior, addNewExam, addNewNotes, addNewPerformance, deleteStudent } from "../models/student.js";
 import { getClassBySlug } from "../models/class.js";
 import db from "../models/db.js";
 import { getPerformanceById, saveReport } from "../models/performance.js";
@@ -147,14 +148,6 @@ const processExportReport = async (req, res) => {
         
         // 4. launch puppeteer and generate PDF
         
-        // const browser = await puppeteer.launch({
-        //     args: ['--no-sandbox', '--disable-setuid-sandbox']  // required for Linux/Render
-        // })
-        // const browser = await puppeteer.launch({
-        //     args: chromium.args,
-        //     executablePath: await chromium.executablePath(),
-        //     headless: chromium.headless,
-        // })
 
         // Check if you are running locally on Windows
         const isLocal = process.platform === 'win32' || process.env.NODE_ENV === 'development';
@@ -198,4 +191,7 @@ const processExportReport = async (req, res) => {
 }
 
 
-export {showStudentDetailPage, processAddNewPerformance, processGenerateReport, processSaveReport, processExportReport}
+
+
+export {showStudentDetailPage, processAddNewPerformance, processGenerateReport, 
+    processSaveReport, processExportReport}

@@ -46,6 +46,12 @@
                             <div class="student-actions">
                                 <a href="/classes/<%= cls.slug %>/students/<%= student.studentSlug %>" 
                                 class="view-btn">View →</a>
+                                <button class="delete-student-btn" 
+                                      data-class-slug = "<%= cls.slug %>"
+                                      data-student-id="<%= student.studentId %>"
+                                      data-student-name="<%= student.studentName %>">
+                                  Delete
+                              </button>
                             </div>
                         </div>
                     <% }) %>

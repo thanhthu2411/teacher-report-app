@@ -108,6 +108,12 @@ const displayStudents = (students, cls) => {
                             <div class="student-actions">
                                 <a href="/classes/${cls.slug}/students/${student.studentSlug}" 
                                 class="view-btn">View →</a>
+                                <button class="delete-student-btn" 
+                                      data-class-slug = "${cls.slug}
+                                      data-student-id="${student.studentId}"
+                                      data-student-name="${student.studentName}">
+                                  Delete
+                              </button>
                             </div>
                         </div>`
                     
@@ -116,4 +122,38 @@ const displayStudents = (students, cls) => {
     }
 }
 
-export {editClassFormHandler, addStudentFormHandler, addStudentsHandler}
+const deleteStudentHandler = () => {
+    document.addEventListener("click", async (e) => {
+        const deleteBtn = e.target.closest(".delete-student-btn")
+        if (!deleteBtn) return
+
+        const studentId = deleteBtn.dataset.studentId
+        const classSlug = deleteBtn.dataset.classSlug
+        const studentName = deleteBtn.dataset.studentName
+
+        const confirmed = confirm(`Are you sure you want to delete ${studentName}? This will also delete all their performance records and reports.`)
+        if (!confirmed) return
+
+        try {
+            const response = await fetch(`/api/classes/${classSlug}/students/${studentId}`, {
+                method: "DELETE",
+                credentials: "include"
+            })
+
+            if (!response.ok) {
+                return
+            }
+
+            const result = await response.json();
+            displayStudents(result.students, result.cls)
+        } catch(error) {
+            console.error(error)
+        }
+
+    })
+
+
+
+}
+
+export {editClassFormHandler, addStudentFormHandler, addStudentsHandler, deleteStudentHandler}

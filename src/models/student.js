@@ -135,4 +135,14 @@ const addNewNotes = async (performanceId, text) => {
 
 }
 
-export {getStudentByClass, addNewStudent, getSpecificStudent, getPerformanceByStudent, addNewBehavior, addNewExam, addNewNotes, addNewPerformance, getStudentBySlug}
+const deleteStudent = async (studentId) => {
+    const query = "DELETE FROM students WHERE id = $1"
+    const result = await db.query(query, [studentId]);
+    return result.rowCount > 0
+}
+
+// update display class, frontend js for delete
+
+export {getStudentByClass, addNewStudent, getSpecificStudent, 
+    getPerformanceByStudent, addNewBehavior, addNewExam, addNewNotes, 
+    addNewPerformance, getStudentBySlug, deleteStudent}

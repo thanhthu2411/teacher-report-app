@@ -54,7 +54,21 @@
   .student-actions { display: flex; gap: 6px; }
   .view-btn { font-size: 12px; color: #6B8F71; text-decoration: none; font-weight: 500; padding: 5px 12px; border: 0.5px solid #6B8F71; border-radius: 6px; transition: all 0.15s; }
   .view-btn:hover { background: #6B8F71; color: #fff; }
+  .delete-student-btn {
+      font-size: 12px;
+      color: #C0503A;
+      background: transparent;
+      border: 0.5px solid #C0503A;
+      border-radius: 6px;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: all 0.15s;
+  }
 
+  .delete-student-btn:hover {
+      background: #C0503A;
+      color: white;
+  }
   /* empty state */
   .empty-state { background: #fff; border-radius: 12px; padding: 3rem 2rem; text-align: center; border: 0.5px dashed #C8C5BD; }
   .empty-state p { color: #7A7D85; font-size: 14px; line-height: 1.8; }

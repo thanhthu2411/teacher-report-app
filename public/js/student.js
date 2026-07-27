@@ -26,6 +26,8 @@ const closePerformanceModal = () => {
 const addExamHander = () => {
   const addBtn = document.getElementById("add-exam-btn");
 
+  if (!addBtn) return
+
   addBtn.addEventListener("click", () => {
     const examContainer = document.getElementById("exam-list");
     const newRow = document.createElement("div");
@@ -50,7 +52,10 @@ const removeExamBtnHander = () => {
 // add notes btn
 
 const addNoteHandler = () => {
-  document.getElementById("add-note-btn").addEventListener("click", () => {
+  document.addEventListener("click", (e) => {
+    const addNoteBtn = e.target.closest("#add-note-btn")
+    if (!addNoteBtn) return 
+    
     const noteList = document.getElementById("notes-list");
     const newRow = document.createElement("div");
     newRow.className = "note-row";

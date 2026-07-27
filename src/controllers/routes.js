@@ -1,8 +1,9 @@
 import { Router } from "express";
 import authRouter from '../routes/auth.js';
 import { showDashboard, processCreateClass } from "./dashboard.js";
-import { showClassDetailPage, processAddNewStudent } from "./class.js";
-import { showStudentDetailPage, processAddNewPerformance, processGenerateReport, processSaveReport, processExportReport } from "./student.js";
+import { showClassDetailPage, processAddNewStudent, processDeleteStudent } from "./class.js";
+import { showStudentDetailPage, processAddNewPerformance, processGenerateReport, 
+    processSaveReport, processExportReport } from "./student.js";
 import { requireLogin } from "../middlewares/auth.js";
 import { addClassValidation } from "../middlewares/form.js";
 const router = Router()
@@ -15,6 +16,7 @@ router.get('/classes/:classSlug', requireLogin, showClassDetailPage);
 router.post('/api/classes/:classSlug/students', requireLogin, processAddNewStudent);
 
 router.get('/classes/:classSlug/students/:studentSlug', requireLogin, showStudentDetailPage)
+router.delete('/api/classes/:classSlug/students/:studentId', requireLogin, processDeleteStudent)
 
 router.post('/api/students/:studentSlug/performance', requireLogin, processAddNewPerformance)
 // router.post('/api/students/:studentSlug/performance/:performanceId/report', requireLogin)
