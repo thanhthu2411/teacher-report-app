@@ -1,3 +1,5 @@
+import { showToast } from "./header";
+
 const addPerformanceFormHandler = () => {
   const addBtn = document.getElementById("add-performance-btn");
   if (!addBtn) return;
@@ -112,17 +114,18 @@ const addPerformanceHandler = () => {
     });
 
     // 2. basic validation
-    if (!periodLabel) return;
-    // showToast('Please select a period', 'error')
-    if (exams.length === 0) return;
-    // showToast('Please add at least one exam', 'error')
-    if (
-      !behavior.attendance ||
-      !behavior.totalDays ||
-      !behavior.ruleFollowing
-    ) {
-      return;
-      // showToast('Please fill in all behavior fields', 'error')
+    // option A — use {}
+    if (!periodLabel) {
+        showToast('Please select a period', 'error')
+        return
+    }
+    if (exams.length === 0) {
+        showToast('Please add at least one exam', 'error')
+        return
+    }
+    if (!behavior.attendance || !behavior.totalDays || !behavior.ruleFollowing) {
+        showToast('Please fill in all behavior fields', 'error')
+        return
     }
 
     // 3. send to server
@@ -150,15 +153,17 @@ const fetchAndDisplayPerformance = async (url, data) => {
     });
 
     if (!response.ok) {
-      const text = await response.text();
-      console.log("Server error:", text);
-      return;
-    }
+      const result = await response.json();
+      showToast(result.message, 'error')
+      return
+  }
 
     const result = await response.json();
     displayPerformance(result.performances, result.student);
     closePerformanceModal();
+    showToast(result.message)
   } catch (error) {
+    showToast('Failed to add performance', 'error')
     console.error(error);
   }
 };
@@ -290,7 +295,8 @@ const fetchGenerateReport = async (performanceId) => {
 
 
     if (!response.ok) {
-        // showToast(result.message, 'error')
+        const result = await response.json();
+        showToast(result.message, 'error')
         return
     }
 
@@ -312,8 +318,9 @@ const generateReportHandler = () => {
 
         try {
             await fetchGenerateReport(performanceId)  // ← calls shared function
+            showToast('Report generated — click Save to keep it')
         } catch (error) {
-            // showToast('Failed to generate report', 'error')
+            showToast('Failed to generate report', 'error')
             console.error(error)
         } finally {
             generateBtn.textContent = 'Generate Report'
@@ -383,10 +390,11 @@ const saveReportHander = () => {
         body: JSON.stringify({ content })
       })
 
-      if(!response.ok) {
-        // showToast()
+      if (!response.ok) {
+        const result = await response.json();
+        showToast(result.message, 'error')
         return
-      }
+    }
 
       const result = await response.json()
 
@@ -396,10 +404,10 @@ const saveReportHander = () => {
         setTimeout(() => savedLabel.classList.remove('visible'), 3000)
       }
 
-      // showToast()
+      showToast(result.message)
 
     } catch(error) {
-      // showToast
+      showToast('Failed to save report', 'error')
         console.error(error)
     }
   })
@@ -417,9 +425,9 @@ const regenerateReportHandler = () => {
 
         try {
             await fetchGenerateReport(performanceId)  // ← same shared function
-            // showToast('Report regenerated — click Save to keep it')
+            showToast('Report regenerated — click Save to keep it')
         } catch (error) {
-            // showToast('Failed to regenerate report', 'error')
+            showToast('Failed to regenerate report', 'error')
             console.error(error)
         } finally {
             regenerateBtn.textContent = 'Regenerate'
@@ -449,6 +457,7 @@ const exportReportHandler = () => {
 
             if (!response.ok || !contentType.includes('application/pdf')) {
                 const text = await response.text()
+                showToast('Failed to export report', 'error')
                 console.log('server response:', text)
                 return
             }
@@ -468,6 +477,7 @@ const exportReportHandler = () => {
             URL.revokeObjectURL(url)
 
         } catch(error) {
+          showToast('Failed to export report', 'error')
           console.error(error)
         } finally {
             exportBtn.textContent = 'Export PDF'

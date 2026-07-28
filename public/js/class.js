@@ -1,3 +1,4 @@
+import { showToast } from "./header";
 
 
 const editClassFormHandler = () => {
@@ -70,14 +71,17 @@ const fectchandDisplayStudents = async (url, studentData) => {
         })
 
         if (!response.ok) {
-            // const result = await response.json();
+            const result = await response.json();
+            showToast(result.message, 'error')
             return
         }
 
         const result = await response.json();
         displayStudents(result.students, result.cls);
         closeAddStudentModal();
+        showToast(result.message)
     } catch(error) {
+        showToast('Failed to add students', 'error')
         console.error(error);
     }
 }
@@ -141,12 +145,16 @@ const deleteStudentHandler = () => {
             })
 
             if (!response.ok) {
+                const result = await response.json();
+                showToast(result.message, 'error')
                 return
             }
 
             const result = await response.json();
             displayStudents(result.students, result.cls)
+            showToast(result.message)
         } catch(error) {
+            showToast('Failed to delete students', 'error')
             console.error(error)
         }
 

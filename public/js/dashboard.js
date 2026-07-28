@@ -46,20 +46,21 @@ const fetchAndDisplay = async(url, classData) => {
         })
 
         if (!response.ok) {
-            const result = await response.json();
-            // showToast()
-            return;
+                const result = await response.json();
+                showToast(result.message, 'error')
+                return
         }
 
         const result = await response.json();
-        // showToast()
-        console.log(result.classes);
         displayClass(result.classes);
         closeModal();
+        showToast(result.message)
+
 
     } catch(error) {
         console.error(error);
-        //showToast()
+        showToast('Failed to create new class', 'error')
+
     }
 }
 
