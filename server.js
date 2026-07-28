@@ -8,6 +8,7 @@ import { addLocalVariables } from './src/middlewares/global.js'
 import connectPgSimple from "connect-pg-simple";
 import db, {pool} from './src/models/db.js'
 import { generateReport } from './src/utils/ai.js'
+import flash from './src/middlewares/flash.js'
 
 const app = express()
 app.set('trust proxy', 1);
@@ -45,6 +46,8 @@ app.set('views', path.join(__dirname, 'src/views'))
 app.use(express.urlencoded({extended: true}))
 app.use(express.json())
 
+
+app.use(flash);
 app.use(addLocalVariables);
 
 // routes

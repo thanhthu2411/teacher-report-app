@@ -22,3 +22,22 @@
         </div>
     </header>
     <div id="toast" class="toast" style="display:none"></div>
+        <% 
+            const messages = flash();
+            const hasMessages = Object.values(messages).some(arr => arr.length > 0);
+        %>
+        <% if (hasMessages) { %>
+
+            <div class="flash-messages">
+                <% Object.keys(messages).forEach(type => { %>
+                    <% messages[type].forEach(message => { %>
+                        <div class="flash <%= type %>">
+                            <%= message %>
+                            <!-- <button class="flash-close-btn" aria-label="close button">
+                                x
+                            </button> -->
+                        </div>
+                    <% }); %>
+                <% }); %>
+            </div>
+        <% } %>

@@ -27,15 +27,17 @@ const processRegistrationForm = async (req, res) => {
     try {
         const emailExists = await emailExist(email);
         if (emailExists) {
-            // req.flash('warning', 'Email already registered!');
+            req.flash('warning', 'Email already registered!');
             return res.redirect("/register");
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = await saveUser(name, email, hashedPassword);
+        req.flash('success', 'Register successfully');
         res.redirect("/login");
     } catch(error) {
         console.error("Error saving user:", error);
+        req.flash('error', 'Unable to register your account. Please try again.');
         res.redirect("/register");
     }
 
@@ -66,25 +68,25 @@ const processLoginForm = async (req, res) => {
     try {
         const user = await findUserbyEmail(email);
         if(!user) {
-            // req.flash('error', 'Invalid email or password')            
+            req.flash('error', 'Invalid email or password')            
             return res.redirect('/login');
         }
 
         const isMatched =  await verifyPassword(password, user.password);
 
         if (!isMatched) {
-            // res.flash 
+            req.flash('error', 'Invalid email or password')            
             return res.redirect("/login");
         }
 
         delete user.password;
         req.session.user = user;
-        // req.flash('success', `Welcome back, ${user.name}`);
+        req.flash('success', `Welcome back, ${user.name}`);
         res.redirect('/dashboard');
 
     } catch(error) {
         console.error("Error saving user:", error);
-        // req.flash()
+        req.flash('error', 'Failed to log you in. Please try again.')
         res.redirect("/login");
 
     }

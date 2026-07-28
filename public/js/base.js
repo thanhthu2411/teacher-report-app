@@ -4,6 +4,8 @@ import { addPerformanceFormHandler, addExamHander, addNoteHandler, removeExamBtn
     exportReportHandler
  } from "./student.js";
 
+ import { flashMessageHandler } from "./header.js";
+
 const init = async () => {
     addClassFormHander();
     addStudentFormHandler();
@@ -20,7 +22,8 @@ const init = async () => {
     saveReportHander();
     regenerateReportHandler();
     exportReportHandler();
-    deleteStudentHandler()
+    deleteStudentHandler();
+    flashMessageHandler()
 }
 
 init();

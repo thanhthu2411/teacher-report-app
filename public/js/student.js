@@ -1,4 +1,4 @@
-import { showToast } from "./header";
+import { showToast } from "./header.js";
 
 const addPerformanceFormHandler = () => {
   const addBtn = document.getElementById("add-performance-btn");
@@ -475,6 +475,7 @@ const exportReportHandler = () => {
             aLink.click()
             //Cleans up memory — releases the temporary blob URL
             URL.revokeObjectURL(url)
+            showToast("Report exported successfully.")
 
         } catch(error) {
           showToast('Failed to export report', 'error')
