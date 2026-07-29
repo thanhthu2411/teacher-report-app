@@ -24,6 +24,7 @@ An AI-powered web application that helps teachers manage classes, track student 
 - **AI Report Generation** — generate professional Vietnamese progress reports using Google Gemini AI
 - **Editable Reports** — review and edit AI-generated reports before saving
 - **Report History** — view all past performance records and reports per student
+- **PDF Export** — export student reports as PDF files
 
 ---
 
@@ -146,7 +147,6 @@ Reports are written in Vietnamese, addressed to parents, and highlight strengths
 ## 📋 Known Limitations
 
 - Edit class and edit student features not yet implemented
-- No PDF/Word export yet (planned)
 - No parent-facing portal
 - Single language UI (Vietnamese reports only)
 
