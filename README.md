@@ -24,7 +24,6 @@ An AI-powered web application that helps teachers manage classes, track student 
 - **AI Report Generation** — generate professional Vietnamese progress reports using Google Gemini AI
 - **Editable Reports** — review and edit AI-generated reports before saving
 - **Report History** — view all past performance records and reports per student
-- **Role-based Access** — admin and teacher roles with protected routes
 
 ---
 
